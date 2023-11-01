@@ -9,11 +9,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "order")
+@Table(name = "\"order\"")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Order {
     @Setter(AccessLevel.NONE)
     @Id
@@ -28,10 +29,12 @@ public class Order {
     List<ProductLine> listOfProductLines;
 
     @CreationTimestamp
+    @Setter(AccessLevel.NONE)
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Setter(AccessLevel.NONE)
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 

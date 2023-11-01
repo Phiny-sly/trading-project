@@ -28,10 +28,12 @@ public class ProductLine {
     private Order order;
 
     @CreationTimestamp
+    @Setter(AccessLevel.NONE)
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Setter(AccessLevel.NONE)
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
