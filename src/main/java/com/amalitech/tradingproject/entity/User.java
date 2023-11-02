@@ -1,13 +1,16 @@
 package com.amalitech.tradingproject.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.authority.SimpleGrantedAuthority;
+//import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,7 +53,7 @@ public class User implements UserDetails {
     private Timestamp updatedAt;
 
     @OneToMany(mappedBy = "user")
-    private transient Set<Order> listOfOrders;
+    private Set<Order> listOfOrders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

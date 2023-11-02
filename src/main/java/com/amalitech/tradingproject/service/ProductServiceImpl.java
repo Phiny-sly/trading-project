@@ -58,4 +58,9 @@ public class ProductServiceImpl implements ProductService {
                 .map(productLine -> EntityMapper.INSTANCE.convertToProductDto(productLine.getProduct()))
                 .toList();
     }
+
+    @Override
+    public void deleteProduct(long id) {
+        productRepository.deleteById(id);
+    }
 }

@@ -1,17 +1,21 @@
-package com.amalitech.tradingproject.resolver;
+package com.amalitech.tradingproject.controller;
 
 import com.amalitech.tradingproject.dto.UserDto;
 import com.amalitech.tradingproject.payload.UserPayload;
 import com.amalitech.tradingproject.service.UserService;
-import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
-@Component
-public class UserMutationResolver implements GraphQLMutationResolver {
+import java.util.List;
 
+@RestController
+public class UserController {
     @Autowired
     private UserService userService;
 
@@ -25,9 +29,20 @@ public class UserMutationResolver implements GraphQLMutationResolver {
         return userService.updateUser(id, userPayload);
     }
 
-    @MutationMapping
+    @MutationMapping(value = "createUser")
     public UserDto createUser(@Argument UserPayload userPayload) {
         return userService.createUser(userPayload);
+    }
+
+    @QueryMapping
+    @Secured("ROLE_ADMIN")
+    public List<UserDto> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @QueryMapping
+    public UserDto getUserById(@Argument long id) {
+        return userService.getUserById(id);
     }
 }
 

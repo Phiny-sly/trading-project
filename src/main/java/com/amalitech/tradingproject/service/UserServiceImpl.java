@@ -7,8 +7,6 @@ import com.amalitech.tradingproject.exception.EmailAlreadyExistsException;
 import com.amalitech.tradingproject.exception.UserDoesNotExistException;
 import com.amalitech.tradingproject.payload.UserPayload;
 import com.amalitech.tradingproject.repository.UserRepository;
-import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService, GraphQLQueryResolver, GraphQLMutationResolver {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;

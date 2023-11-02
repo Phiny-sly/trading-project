@@ -1,56 +1,56 @@
 type Query{
     getAllUsers:[UserDto!]!
-    getUserById(id:Int!):UserDto!
+    getUserById(id:ID!):UserDto!
     getAllProducts:[ProductDto!]!
-    getProductsByOrderId(id:Int!):[ProductDto!]!
+    getProductsByOrderId(id:ID!):[ProductDto!]!
     getAllOrders:[OrderDto!]!
-    getOrderById(id:Int!):OrderDto!
-    getOrdersByUserId(id:Int!):[OrderDto!]!
+    getOrderById(id:ID!):OrderDto!
+    getOrdersByUserId(id:ID!):[OrderDto!]!
 }
 
 type Mutation{
-    createUser(input:UserPayload!):UserDto!
-    updateUser(id:Int!,input:UserPayload!):UserDto!
-    deleteUser(id:Int!):UserDto!
+    createUser(input:UserPayload!):UserDto
+    updateUser(id:ID!,input:UserPayload!):UserDto!
+    deleteUser(id:ID!):UserDto!
     createProduct(input:ProductPayload!):ProductDto!
-    updateProduct(input:ProductPayload!,id:Int!):ProductDto!
-    deleteProduct(id:Int!):ID!
-    createOrder(input:OrderPayload!,userId:Int!):OrderDto!
-    updateOrder(input:OrderPayload!,id:Int!):OrderDto!
-    deleteOrder(id:Int!):ID!
+    updateProduct(input:ProductPayload!,id:ID!):ProductDto!
+    deleteProduct(id:ID!):ID!
+    createOrder(input:OrderPayload!,userId:ID!):OrderDto!
+    updateOrder(input:OrderPayload!,id:ID!):OrderDto!
+    deleteOrder(id:ID!):ID!
 }
 
 type UserDto{
-  id:Int!
+  id:ID!
   name:String!
   email:String!
   role:Role!
 }
 
 type ProductDto{
-    id:Int!
+    id:ID!
     productName:String!
     price:Float!
     stock:Int!
 }
 
 type OrderDto{
-    id:Int!
+    id:ID!
     userId:Int!
     productLineDto:[ProductLineDto!]!
 }
 
 type ProductLineDto{
-    id:Int!
+    id:ID!
     productName:String!
     quantity:Int!
 }
 
 input UserPayload{
-    name:String!
-    email:String!
-    role:Role!
-    password:String!
+    name:String
+    email:String
+    role:Role
+    password:String
 }
 
 input ProductPayload{

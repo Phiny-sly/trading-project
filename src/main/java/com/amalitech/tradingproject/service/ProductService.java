@@ -10,4 +10,5 @@ public interface ProductService {
     ProductDto updateProduct(ProductPayload productPayload, long id);
     List<ProductDto> getAllProducts();
     List<ProductDto> getProductsByOrderId(long orderId);
+    void deleteProduct(long id);
 }
