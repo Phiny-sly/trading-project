@@ -2,9 +2,11 @@ package com.amalitech.tradingproject.config;
 
 import com.amalitech.tradingproject.dto.OrderDto;
 import com.amalitech.tradingproject.dto.ProductDto;
+import com.amalitech.tradingproject.dto.ProductLineDto;
 import com.amalitech.tradingproject.dto.UserDto;
 import com.amalitech.tradingproject.entity.Order;
 import com.amalitech.tradingproject.entity.Product;
+import com.amalitech.tradingproject.entity.ProductLine;
 import com.amalitech.tradingproject.entity.User;
 import com.amalitech.tradingproject.payload.OrderPayload;
 import com.amalitech.tradingproject.payload.ProductPayload;
@@ -41,7 +43,7 @@ public interface EntityMapper {
     OrderDto convertToOrderDto(Order order);
 
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "name", source = "name")
+    @Mapping(target = "productName", source = "name")
     @Mapping(target = "price", source = "price")
     @Mapping(target = "stock", source = "stock")
     ProductDto convertToProductDto(Product product);
@@ -50,6 +52,11 @@ public interface EntityMapper {
     @Mapping(target = "price", source = "price")
     @Mapping(target = "stock", source = "stock")
     Product convertToProduct(ProductPayload productPayload);
+
+    @Mapping(target = "quantity", source = "quantity")
+    @Mapping(target = "productName", expression = "java(productLine.getProduct().getName())")
+    @Mapping(target = "price", expression = "java(productLine.getProduct().getPrice())")
+    ProductLineDto convertToProductLineDto(ProductLine productLine);
 
     void updateProductDetails(@MappingTarget Product product, ProductPayload productPayload);
 }

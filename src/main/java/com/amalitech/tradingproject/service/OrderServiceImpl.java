@@ -12,14 +12,17 @@ import com.amalitech.tradingproject.payload.ProductLinePayload;
 import com.amalitech.tradingproject.repository.OrderRepository;
 import com.amalitech.tradingproject.repository.ProductRepository;
 import com.amalitech.tradingproject.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
@@ -31,17 +34,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto createOrder(OrderPayload orderPayload, long userId) {
         Order order = new Order();
-        Set<ProductLine> productLines = new HashSet<>();
+        List<ProductLine> productLines = new ArrayList<>();
         userRepository.findById(userId).ifPresent(order::setUser);
         orderPayload.getListOfProductLines().forEach(productLine -> validateOrder(productLine, order, productLines));
         order.setListOfProductLines(productLines);
-        return EntityMapper.INSTANCE.convertToOrderDto(orderRepository.save(order));
+        orderRepository.save(order);
+        log.info("order {}", order);
+        return EntityMapper.INSTANCE.convertToOrderDto(order);
     }
 
     @Override
     public OrderDto updateOrder(OrderPayload orderPayload, long id) {
         orderRepository.findById(id).ifPresentOrElse(order -> {
-            Set<ProductLine> productLines = new HashSet<>();
+            List<ProductLine> productLines = new ArrayList<>();
             orderPayload.getListOfProductLines().forEach(productLine -> validateOrder(productLine, order, productLines));
             order.setListOfProductLines(productLines);
             orderRepository.save(order);
@@ -51,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
         return EntityMapper.INSTANCE.convertToOrderDto(orderRepository.findById(id).orElseThrow());
     }
 
-    private void validateOrder(ProductLinePayload productLine, Order order, Set<ProductLine> productLines) {
+    private void validateOrder(ProductLinePayload productLine, Order order, List<ProductLine> productLines) {
         int orderedQuantity = productLine.getQuantity();
         Product product = productRepository.findById(productLine.getProductId()).orElseThrow();
         int stock = product.getStock();
@@ -64,8 +69,9 @@ public class OrderServiceImpl implements OrderService {
 
             product.setStock(stock - orderedQuantity);
             productRepository.save(product);
+        } else {
+            throw new StockLimitException(product.getName(), stock, orderedQuantity);
         }
-        throw new StockLimitException(product.getName(), stock, orderedQuantity);
     }
 
     @Override

@@ -53,7 +53,7 @@ public class User implements UserDetails {
     private Timestamp updatedAt;
 
     @OneToMany(mappedBy = "user")
-    private Set<Order> listOfOrders;
+    private transient Set<Order> listOfOrders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

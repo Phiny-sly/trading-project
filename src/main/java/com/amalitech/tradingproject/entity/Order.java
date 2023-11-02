@@ -6,7 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "\"order\"")
@@ -14,10 +14,11 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Order {
+
     @Setter(AccessLevel.NONE)
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -26,7 +27,7 @@ public class Order {
     private User user;
 
     @OneToMany(mappedBy = "order")
-    Set<ProductLine> listOfProductLines;
+    List<ProductLine> listOfProductLines;
 
     @CreationTimestamp
     @Setter(AccessLevel.NONE)

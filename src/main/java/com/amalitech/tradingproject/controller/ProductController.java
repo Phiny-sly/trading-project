@@ -19,17 +19,17 @@ public class ProductController {
     private ProductService productService;
 
     @MutationMapping
-    public void deleteProduct(@Argument long id) {
+    public void deleteProduct(@Argument("id") long id) {
         productService.deleteProduct(id);
     }
 
     @MutationMapping
-    public ProductDto updateProduct(@Argument ProductPayload productPayload, @Argument long id) {
+    public ProductDto updateProduct(@Argument("input") ProductPayload productPayload, @Argument long id) {
         return productService.updateProduct(productPayload, id);
     }
 
-    @MutationMapping(value = "createProduct")
-    public ProductDto createProduct(@Argument ProductPayload productPayload) {
+    @MutationMapping
+    public ProductDto createProduct(@Argument("input") ProductPayload productPayload) {
         log.info("Creating product: {}", productPayload);
         return productService.createProduct(productPayload);
     }
@@ -40,7 +40,7 @@ public class ProductController {
     }
 
     @QueryMapping
-    public List<ProductDto> getProductsByOrderId(@Argument long id) {
+    public List<ProductDto> getProductsByOrderId(@Argument("id") long id) {
         return productService.getProductsByOrderId(id);
     }
 }

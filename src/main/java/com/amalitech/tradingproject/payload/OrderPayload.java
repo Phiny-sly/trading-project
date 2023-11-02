@@ -2,9 +2,9 @@ package com.amalitech.tradingproject.payload;
 
 import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 public class OrderPayload {
-    private Set<ProductLinePayload> listOfProductLines;
+    private List<ProductLinePayload> listOfProductLines;
 }

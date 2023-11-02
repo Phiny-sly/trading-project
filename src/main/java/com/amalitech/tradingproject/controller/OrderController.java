@@ -17,17 +17,17 @@ public class OrderController {
     private OrderService orderService;
 
     @MutationMapping
-    public void deleteOrder(@Argument long id) {
+    public void deleteOrder(@Argument("id") long id) {
         orderService.deleteOrder(id);
     }
 
     @MutationMapping
-    public OrderDto updateOrder(@Argument OrderPayload orderPayload, long id) {
+    public OrderDto updateOrder(@Argument("input") OrderPayload orderPayload,@Argument("id") long id) {
         return orderService.updateOrder(orderPayload, id);
     }
 
     @MutationMapping
-    public OrderDto createOrder(@Argument OrderPayload orderPayload, long userId) {
+    public OrderDto createOrder(@Argument("input") OrderPayload orderPayload,@Argument("userId") long userId) {
         return orderService.createOrder(orderPayload, userId);
     }
 
@@ -37,12 +37,12 @@ public class OrderController {
     }
 
     @QueryMapping
-    public OrderDto getOrderById(long id) {
+    public OrderDto getOrderById(@Argument("id") long id) {
         return orderService.getOrderById(id);
     }
 
     @QueryMapping
-    public List<OrderDto> getOrdersByUserId(long userId) {
+    public List<OrderDto> getOrdersByUserId(@Argument("id") long userId) {
         return orderService.getOrdersByUserId(userId);
     }
 }

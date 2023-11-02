@@ -20,17 +20,17 @@ public class UserController {
     private UserService userService;
 
     @MutationMapping
-    public void deleteUser(@Argument long id) {
+    public void deleteUser(@Argument("id") long id) {
         userService.deleteUser(id);
     }
 
     @MutationMapping
-    public UserDto updateUser(@Argument long id, @Argument UserPayload userPayload) {
+    public UserDto updateUser(@Argument("id") long id, @Argument("input") UserPayload userPayload) {
         return userService.updateUser(id, userPayload);
     }
 
     @MutationMapping(value = "createUser")
-    public UserDto createUser(@Argument UserPayload userPayload) {
+    public UserDto createUser(@Argument("input") UserPayload userPayload) {
         return userService.createUser(userPayload);
     }
 
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @QueryMapping
-    public UserDto getUserById(@Argument long id) {
+    public UserDto getUserById(@Argument("id") long id) {
         return userService.getUserById(id);
     }
 }
