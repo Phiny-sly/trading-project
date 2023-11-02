@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor
@@ -27,14 +27,17 @@ public class ProductLine {
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
+
     @CreationTimestamp
     @Setter(AccessLevel.NONE)
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
     @UpdateTimestamp
     @Setter(AccessLevel.NONE)
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private Timestamp updatedAt;
 
 }

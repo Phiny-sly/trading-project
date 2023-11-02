@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -42,15 +42,15 @@ public class User implements UserDetails {
     @CreationTimestamp
     @Setter(AccessLevel.NONE)
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
     @UpdateTimestamp
     @Setter(AccessLevel.NONE)
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private Timestamp updatedAt;
 
     @OneToMany(mappedBy = "user")
-    Set<Order> listOfOrders;
+    private transient Set<Order> listOfOrders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

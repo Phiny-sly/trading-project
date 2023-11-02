@@ -5,8 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 @Table(name = "\"order\"")
@@ -26,16 +26,16 @@ public class Order {
     private User user;
 
     @OneToMany(mappedBy = "order")
-    List<ProductLine> listOfProductLines;
+    Set<ProductLine> listOfProductLines;
 
     @CreationTimestamp
     @Setter(AccessLevel.NONE)
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
     @UpdateTimestamp
     @Setter(AccessLevel.NONE)
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private Timestamp updatedAt;
 
 }
