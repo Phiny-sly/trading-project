@@ -1,6 +1,5 @@
 package com.amalitech.tradingproject.service;
 
-import com.amalitech.tradingproject.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
