@@ -1,0 +1,83 @@
+type Query{
+    getAllUsers:[UserDto!]!
+    getUserById(id:ID!):UserDto!
+    getAllProducts:[ProductDto!]!
+    getProductsByOrderId(id:ID!):[ProductDto!]!
+    getAllOrders:[OrderDto!]!
+    getOrderById(id:ID!):OrderDto!
+    getOrdersByUserId(id:ID!):[OrderDto!]!
+}
+
+type Mutation{
+    createUser(input:UserPayload!):UserDto
+    updateUser(id:ID!,input:UserPayload!):UserDto!
+    deleteUser(id:ID!):ID
+    createProduct(input:ProductPayload!):ProductDto!
+    updateProduct(input:ProductPayload!,id:ID!):ProductDto!
+    deleteProduct(id:ID!):ID
+    createOrder(input:OrderPayload!,userId:ID!):OrderDto!
+    updateOrder(input:OrderPayload!,id:ID!):OrderDto!
+    deleteOrder(id:ID!):ID
+    login(input:AuthPayload!):AuthDto!
+}
+
+type UserDto{
+  id:ID!
+  name:String!
+  email:String!
+  role:Role!
+}
+
+type ProductDto{
+    id:ID!
+    productName:String!
+    price:Float!
+    stock:Int!
+}
+
+type OrderDto{
+    id:ID!
+    userId:Int!
+    email:String!
+    listOfProductLines:[ProductLineDto!]!
+}
+
+type ProductLineDto{
+    unitPrice:Float!
+    productName:String!
+    quantity:Int!
+}
+
+type AuthDto{
+    token:String!
+}
+
+input UserPayload{
+    name:String
+    email:String
+    role:Role
+    password:String
+}
+
+input ProductPayload{
+    name:String
+    price:Float
+    stock:Int
+}
+
+input OrderPayload{
+    listOfProductLines:[ProductLinePayload!]!
+}
+
+input ProductLinePayload{
+    productId:Int!
+    quantity:Int!
+}
+input AuthPayload{
+    email:String!
+    password:String!
+}
+enum Role {
+    ADMIN
+    USER
+}
