@@ -61,4 +61,4 @@ This project is a Java Spring Boot application that provides a GraphQL API for u
 - To test GraphQL endpoints requiring authentication, include the JWT token in the header as follows:
   Authorization: Bearer <your-token> in JSON format. Example: {
   "Authorization": "Bearer YOUR_ACCESS_TOKEN"}
-- The Jwt token is generated when you sign in to your account.
+- The Jwt token is generated when you sign in to your account. You must first create an account and sign in to obtain the token.
