@@ -2,8 +2,8 @@ package com.amalitech.tradingproject.service;
 
 import com.amalitech.tradingproject.config.EntityMapper;
 import com.amalitech.tradingproject.dto.ProductDto;
-import com.amalitech.tradingproject.entity.Order;
-import com.amalitech.tradingproject.entity.Product;
+import com.amalitech.tradingproject.model.Order;
+import com.amalitech.tradingproject.model.Product;
 import com.amalitech.tradingproject.exception.OrderDoesNotExistException;
 import com.amalitech.tradingproject.exception.ProductAlreadyExistsException;
 import com.amalitech.tradingproject.exception.ProductDoesNotExistException;

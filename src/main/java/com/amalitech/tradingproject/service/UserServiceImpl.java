@@ -2,7 +2,7 @@ package com.amalitech.tradingproject.service;
 
 import com.amalitech.tradingproject.config.EntityMapper;
 import com.amalitech.tradingproject.dto.UserDto;
-import com.amalitech.tradingproject.entity.User;
+import com.amalitech.tradingproject.model.User;
 import com.amalitech.tradingproject.exception.EmailAlreadyExistsException;
 import com.amalitech.tradingproject.exception.UserDoesNotExistException;
 import com.amalitech.tradingproject.payload.UserPayload;
@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 
@@ -71,6 +72,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserDoesNotExistException(email));
+        return org.springframework.security.core.userdetails.User
+                .withUsername(email)
+                .password(user.getPassword())
+                .roles(user.getRole().name())
+                .build();
     }
 }

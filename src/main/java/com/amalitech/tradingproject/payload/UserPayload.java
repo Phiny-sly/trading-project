@@ -1,6 +1,6 @@
 package com.amalitech.tradingproject.payload;
 
-import com.amalitech.tradingproject.entity.Role;
+import com.amalitech.tradingproject.model.Role;
 import lombok.Data;
 
 @Data

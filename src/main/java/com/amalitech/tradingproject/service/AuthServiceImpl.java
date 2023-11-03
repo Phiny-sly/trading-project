@@ -1,7 +1,7 @@
 package com.amalitech.tradingproject.service;
 
 import com.amalitech.tradingproject.dto.AuthDto;
-import com.amalitech.tradingproject.entity.User;
+import com.amalitech.tradingproject.model.User;
 import com.amalitech.tradingproject.payload.AuthPayload;
 import com.amalitech.tradingproject.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 
 @Service
 @Slf4j
-public class AuthService {
+public class AuthServiceImpl implements AuthService{
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -33,6 +33,7 @@ public class AuthService {
     @Autowired
     private HttpSession httpSession;
 
+    @Override
     public AuthDto login(AuthPayload authPayload) {
         String token;
         try {
@@ -42,7 +43,6 @@ public class AuthService {
             token = jwtService.generateToken(userDetails);
             User user = userRepository.findByEmail(authPayload.getEmail()).orElseThrow();
             httpSession.setAttribute("user", user);
-
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid email/password supplied");
         }
