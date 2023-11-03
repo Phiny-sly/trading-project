@@ -1,1 +1,0 @@
-# amalitech-challenge
