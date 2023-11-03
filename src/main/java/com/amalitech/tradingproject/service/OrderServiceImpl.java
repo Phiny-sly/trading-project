@@ -8,6 +8,7 @@ import com.amalitech.tradingproject.entity.ProductLine;
 import com.amalitech.tradingproject.exception.OrderDoesNotExistException;
 import com.amalitech.tradingproject.exception.ProductDoesNotExistException;
 import com.amalitech.tradingproject.exception.StockLimitException;
+import com.amalitech.tradingproject.exception.UserDoesNotExistException;
 import com.amalitech.tradingproject.payload.OrderPayload;
 import com.amalitech.tradingproject.payload.ProductLinePayload;
 import com.amalitech.tradingproject.repository.OrderRepository;
@@ -38,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         List<ProductLine> productLines = new ArrayList<>();
         userRepository.findById(userId).ifPresentOrElse(order::setUser, () -> {
-            throw new OrderDoesNotExistException(userId);
+            throw new UserDoesNotExistException(userId);
         });
         orderPayload.getListOfProductLines().forEach(productLine -> validateOrder(productLine, order, productLines));
         order.setListOfProductLines(productLines);
