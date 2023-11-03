@@ -41,7 +41,7 @@ type OrderDto{
 }
 
 type ProductLineDto{
-    price:Float!
+    unitPrice:Float!
     productName:String!
     quantity:Int!
 }

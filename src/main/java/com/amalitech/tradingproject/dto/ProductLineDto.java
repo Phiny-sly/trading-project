@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ProductLineDto {
     private int quantity;
-    private double price;
+    private double unitPrice;
     private String productName;
 }
