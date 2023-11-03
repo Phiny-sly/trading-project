@@ -1,4 +1,4 @@
-package com.amalitech.tradingproject.entity;
+package com.amalitech.tradingproject.model;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
