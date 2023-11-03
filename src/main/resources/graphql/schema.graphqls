@@ -37,6 +37,7 @@ type ProductDto{
 type OrderDto{
     id:ID!
     userId:Int!
+    email:String!
     listOfProductLines:[ProductLineDto!]!
 }
 
