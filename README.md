@@ -47,7 +47,7 @@ This project is a Java Spring Boot application that provides a GraphQL API for u
     mvn -N io.takari:maven:wrapper
    ```
 3. **Build the Docker Image:**
-   - Make sure you have Docker installed.
+   - Make sure you have Docker installed and running.
    - Navigate to the root directory of the project.
    ```bash
    docker build -t amalitech-challenge .
