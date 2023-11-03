@@ -1,4 +1,4 @@
-# amalitech-challenge
+# Amalitech-Challenge
 
 ## Description
 This project is a Java Spring Boot application that provides a GraphQL API for users to place orders on various products. The application is containerized using Docker, making it easy to deploy and run in a consistent environment. Testing can be performed using GraphiQL, and no front-end is required.
@@ -40,21 +40,155 @@ This project is a Java Spring Boot application that provides a GraphQL API for u
    git clone https://github.com/Phiny-sly/amalitech-challenge
    cd amalitech-challenge
    ```
-2. **Build the Docker Image:**
+2. **Install Maven Wrapper:**
+   - Ensure you have Maven installed and added to your system's `PATH`.
+   - If you encounter an error while building the Docker image, run the following command to install Maven Wrapper locally:
+   ```bash
+    mvn -N io.takari:maven:wrapper
+   ```
+3. **Build the Docker Image:**
    - Make sure you have Docker installed.
    - Navigate to the root directory of the project.
    ```bash
    docker build -t amalitech-challenge .
    ```
-3. **Run the Docker Image:**
+4. **Run the Docker Image:**
    ```bash
    docker run -p 8080:8080 amalitech-challenge
    ```
-4. **Access the GraphQL API:**
+5. **Access the GraphQL API:**
     - The GraphiQL interface can be accessed at `http://localhost:8080/graphiql`.
-   
-### How to Test the GraphQL API:
 
+### GraphQL API Overview:
+
+#### Query Types:
+
+- **getAllUsers:**
+    - Returns a list of all users.
+
+- **getUserById(id):**
+    - Returns details for a specific user identified by the provided ID.
+
+- **getAllProducts:**
+    - Returns a list of all products.
+
+- **getProductsByOrderId(id):**
+    - Returns a list of products associated with a specific order ID.
+
+- **getAllOrders:**
+    - Returns a list of all orders.
+
+- **getOrderById(id):**
+    - Returns details for a specific order identified by the provided ID.
+
+- **getOrdersByUserId(id):**
+    - Returns a list of orders associated with a specific user ID.
+
+#### Mutation Types:
+
+- **createUser(input):**
+    - Creates a new user based on the provided input.
+
+- **updateUser(id, input):**
+    - Updates user details for the user identified by the provided ID.
+
+- **deleteUser(id):**
+    - Deletes a user identified by the provided ID.
+
+- **createProduct(input):**
+    - Creates a new product based on the provided input.
+
+- **updateProduct(id, input):**
+    - Updates product details for the product identified by the provided ID.
+
+- **deleteProduct(id):**
+    - Deletes a product identified by the provided ID.
+
+- **createOrder(input, userId):**
+    - Creates a new order based on the provided input and user ID.
+
+- **updateOrder(id, input):**
+    - Updates order details for the order identified by the provided ID.
+
+- **deleteOrder(id):**
+    - Deletes an order identified by the provided ID.
+
+- **login(input):**
+    - Performs user authentication and returns authentication details.
+
+#### GraphQL Types:
+
+- **UserDto:**
+    - Represents detail for a user.
+        - `id: ID!`
+        - `name: String!`
+        - `email: String!`
+        - `role: Role!`
+
+- **ProductDto:**
+    - Represents details for a product.
+        - `id: ID!`
+        - `productName: String!`
+        - `price: Float!`
+        - `stock: Int!`
+
+- **OrderDto:**
+    - Represents details for an order.
+        - `id: ID!`
+        - `userId: Int!`
+        - `email: String!`
+        - `listOfProductLines: [ProductLineDto!]!`
+
+- **ProductLineDto:**
+    - Represents details for a product line within an order.
+        - `unitPrice: Float!`
+        - `productName: String!`
+        - `quantity: Int!`
+
+- **AuthDto:**
+    - Represents authentication details.
+        - `token: String!`
+
+#### Input Types:
+
+- **UserPayload:**
+    - Represents input for creating or updating a user.
+        - `name: String`
+        - `email: String`
+        - `role: Role`
+        - `password: String`
+
+- **ProductPayload:**
+    - Represents input for creating or updating a product.
+        - `name: String`
+        - `price: Float`
+        - `stock: Int`
+
+- **OrderPayload:**
+    - Represents input for creating or updating an order.
+        - `listOfProductLines: [ProductLinePayload!]`
+
+- **ProductLinePayload:**
+    - Represents input for creating or updating a product line within an order.
+        - `productId: Int!`
+        - `quantity: Int!`
+
+- **AuthPayload:**
+    - Represents input for user authentication.
+        - `email: String!`
+        - `password: String!`
+
+#### Enum Type:
+
+- **Role:**
+    - Represents user roles.
+        - `ADMIN`
+        - `USER`
+
+#### How to Use:
+
+- Use these GraphQL queries, mutations, and types to interact with the API.
+- For mutations that require authentication, include the JWT token in the header as follows:
 - To test GraphQL endpoints requiring authentication, include the JWT token in the header as follows:
   Authorization: Bearer <your-token> in JSON format. Example: {
   "Authorization": "Bearer YOUR_ACCESS_TOKEN"}
