@@ -32,6 +32,9 @@ This project is a Java Spring Boot application that provides a GraphQL API for u
 
 - **Containerization:**
     - [Docker](https://www.docker.com/): Containerization platform for packaging applications and their dependencies.
+    
+- **Build and Dependency Management:** 
+    - [Maven](https://maven.apache.org/): Dependency management tool used to streamline the build process.
 
 ### How to Build and Run the Docker Image:
 
