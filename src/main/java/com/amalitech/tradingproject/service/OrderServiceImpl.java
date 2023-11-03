@@ -13,10 +13,13 @@ import com.amalitech.tradingproject.payload.ProductLinePayload;
 import com.amalitech.tradingproject.repository.OrderRepository;
 import com.amalitech.tradingproject.repository.ProductRepository;
 import com.amalitech.tradingproject.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,8 @@ public class OrderServiceImpl implements OrderService {
     private ProductRepository productRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     public OrderDto createOrder(OrderPayload orderPayload, long userId) {
@@ -45,15 +50,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto updateOrder(OrderPayload orderPayload, long id) {
-        orderRepository.findById(id).ifPresentOrElse(order -> {
-            List<ProductLine> productLines = new ArrayList<>();
-            orderPayload.getListOfProductLines().forEach(productLine -> validateOrder(productLine, order, productLines));
-            order.setListOfProductLines(productLines);
-            orderRepository.save(order);
-        }, () -> {
-            throw new OrderDoesNotExistException(id);
-        });
-        return EntityMapper.INSTANCE.convertToOrderDto(orderRepository.findById(id).orElseThrow());
+        Order order = orderRepository.findById(id).orElseThrow(() -> new OrderDoesNotExistException(id));
+        List<ProductLine> productLines = new ArrayList<>();
+        orderPayload.getListOfProductLines().forEach(productLine -> validateOrder(productLine, order, productLines));
+        order.setListOfProductLines(productLines);
+        orderRepository.save(order);
+        return EntityMapper.INSTANCE.convertToOrderDto(order);
     }
 
     private void validateOrder(ProductLinePayload productLine, Order order, List<ProductLine> productLines) {
