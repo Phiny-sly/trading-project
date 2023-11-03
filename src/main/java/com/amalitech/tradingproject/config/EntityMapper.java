@@ -39,6 +39,7 @@ public interface EntityMapper {
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "userId", expression = "java(order.getUser().getId())")
+    @Mapping(target = "email", expression = "java(order.getUser().getEmail())")
     @Mapping(target = "listOfProductLines", source = "listOfProductLines")
     OrderDto convertToOrderDto(Order order);
 
