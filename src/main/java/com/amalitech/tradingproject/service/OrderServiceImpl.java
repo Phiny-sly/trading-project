@@ -2,9 +2,9 @@ package com.amalitech.tradingproject.service;
 
 import com.amalitech.tradingproject.config.EntityMapper;
 import com.amalitech.tradingproject.dto.OrderDto;
-import com.amalitech.tradingproject.entity.Order;
-import com.amalitech.tradingproject.entity.Product;
-import com.amalitech.tradingproject.entity.ProductLine;
+import com.amalitech.tradingproject.model.Order;
+import com.amalitech.tradingproject.model.Product;
+import com.amalitech.tradingproject.model.ProductLine;
 import com.amalitech.tradingproject.exception.OrderDoesNotExistException;
 import com.amalitech.tradingproject.exception.ProductDoesNotExistException;
 import com.amalitech.tradingproject.exception.StockLimitException;

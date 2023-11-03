@@ -1,6 +1,6 @@
 package com.amalitech.tradingproject.repository;
 
-import com.amalitech.tradingproject.entity.Product;
+import com.amalitech.tradingproject.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
