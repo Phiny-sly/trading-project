@@ -193,3 +193,20 @@ This project is a Java Spring Boot application that provides a GraphQL API for u
   Authorization: Bearer <your-token> in JSON format. Example: {
   "Authorization": "Bearer YOUR_ACCESS_TOKEN"}
 - The Jwt token is generated when you sign in to your account. You must first create an account and sign in to obtain the token.
+
+#### Accessing H2 Console
+
+To access the H2 Console for database management, follow these steps:
+
+1. **Start your Spring Boot application.**
+
+2. **Open a web browser and go to [http://localhost:8080/h2-console](http://localhost:8080/h2-console).**
+
+3. **Use the following H2 database connection settings:**
+    - **JDBC URL:** `jdbc:h2:mem:testdb`
+    - **Username:** `sa`
+    - **Password:** (use password in application.properties)
+
+4. **Click the "Connect" button.**
+
+5. **Explore and manage your H2 database using the H2 Console.**
