@@ -6,7 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -30,8 +30,8 @@ public class Product {
     @Column(name = "price", nullable = false)
     private double price;
 
-    @OneToMany(mappedBy = "product")
-    private Set<ProductLine> listOfProductLines;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<ProductLine> listOfProductLines;
 
     @CreationTimestamp
     @Setter(AccessLevel.NONE)
