@@ -16,11 +16,8 @@ This project is a Java Spring Boot application that provides a GraphQL API for u
    
 4. **Order Placement:**
     - Users can place orders for different products using GraphQL queries.
-
-5. **Product Catalog:**
-    - The application includes a catalog of available products.
-
-6. **GraphiQL Testing:**
+    
+5. **GraphiQL Testing:**
     - Testing and exploring the GraphQL API can be done conveniently using GraphiQL.
 
 ### Technologies Used:
