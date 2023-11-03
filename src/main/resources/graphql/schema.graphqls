@@ -18,6 +18,7 @@ type Mutation{
     createOrder(input:OrderPayload!,userId:ID!):OrderDto!
     updateOrder(input:OrderPayload!,id:ID!):OrderDto!
     deleteOrder(id:ID!):ID
+    login(input:AuthPayload!):AuthDto!
 }
 
 type UserDto{
@@ -47,6 +48,10 @@ type ProductLineDto{
     quantity:Int!
 }
 
+type AuthDto{
+    token:String!
+}
+
 input UserPayload{
     name:String
     email:String
@@ -68,7 +73,10 @@ input ProductLinePayload{
     productId:Int!
     quantity:Int!
 }
-
+input AuthPayload{
+    email:String!
+    password:String!
+}
 enum Role {
     ADMIN
     USER

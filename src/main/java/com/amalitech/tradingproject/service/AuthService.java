@@ -1,2 +1,2 @@
-package com.amalitech.tradingproject.service;public class AuthService {
+package com.amalitech.tradingproject.service;public interface AuthService {
 }
