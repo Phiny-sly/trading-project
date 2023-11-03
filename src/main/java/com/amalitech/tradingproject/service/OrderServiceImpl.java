@@ -6,6 +6,7 @@ import com.amalitech.tradingproject.entity.Order;
 import com.amalitech.tradingproject.entity.Product;
 import com.amalitech.tradingproject.entity.ProductLine;
 import com.amalitech.tradingproject.exception.OrderDoesNotExistException;
+import com.amalitech.tradingproject.exception.ProductDoesNotExistException;
 import com.amalitech.tradingproject.exception.StockLimitException;
 import com.amalitech.tradingproject.payload.OrderPayload;
 import com.amalitech.tradingproject.payload.ProductLinePayload;
@@ -17,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -35,11 +34,12 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto createOrder(OrderPayload orderPayload, long userId) {
         Order order = new Order();
         List<ProductLine> productLines = new ArrayList<>();
-        userRepository.findById(userId).ifPresent(order::setUser);
+        userRepository.findById(userId).ifPresentOrElse(order::setUser, () -> {
+            throw new OrderDoesNotExistException(userId);
+        });
         orderPayload.getListOfProductLines().forEach(productLine -> validateOrder(productLine, order, productLines));
         order.setListOfProductLines(productLines);
         orderRepository.save(order);
-        log.info("order {}", order);
         return EntityMapper.INSTANCE.convertToOrderDto(order);
     }
 
@@ -58,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
 
     private void validateOrder(ProductLinePayload productLine, Order order, List<ProductLine> productLines) {
         int orderedQuantity = productLine.getQuantity();
-        Product product = productRepository.findById(productLine.getProductId()).orElseThrow();
+        Product product = productRepository.findById(productLine.getProductId()).orElseThrow(() -> new ProductDoesNotExistException(productLine.getProductId()));
         int stock = product.getStock();
         if (stock >= orderedQuantity) {
             ProductLine newProductLine = new ProductLine();
@@ -81,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto getOrderById(long id) {
-        return EntityMapper.INSTANCE.convertToOrderDto(orderRepository.findById(id).orElseThrow());
+        return EntityMapper.INSTANCE.convertToOrderDto(orderRepository.findById(id).orElseThrow(() -> new OrderDoesNotExistException(id)));
     }
 
     @Override
