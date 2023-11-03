@@ -7,6 +7,7 @@ import com.amalitech.tradingproject.exception.EmailAlreadyExistsException;
 import com.amalitech.tradingproject.exception.UserDoesNotExistException;
 import com.amalitech.tradingproject.payload.UserPayload;
 import com.amalitech.tradingproject.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
@@ -32,6 +34,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = EntityMapper.INSTANCE.convertToUser(userPayload);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        log.info("User created successfully");
         return EntityMapper.INSTANCE.convertToUserDto(user);
     }
 
@@ -47,7 +50,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }, () -> {
             throw new UserDoesNotExistException(id);
         });
-
+        log.info("User with id {} updated successfully", id);
         return EntityMapper.INSTANCE.convertToUserDto(ref.userResult);
     }
 

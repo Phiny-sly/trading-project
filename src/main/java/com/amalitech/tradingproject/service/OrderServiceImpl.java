@@ -18,8 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,16 +43,18 @@ public class OrderServiceImpl implements OrderService {
         orderPayload.getListOfProductLines().forEach(productLine -> validateOrder(productLine, order, productLines));
         order.setListOfProductLines(productLines);
         orderRepository.save(order);
+        log.info("Order created successfully");
         return EntityMapper.INSTANCE.convertToOrderDto(order);
     }
 
     @Override
-    public OrderDto updateOrder(OrderPayload orderPayload, long id) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new OrderDoesNotExistException(id));
+    public OrderDto updateOrder(OrderPayload orderPayload, long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderDoesNotExistException(orderId));
         List<ProductLine> productLines = new ArrayList<>();
         orderPayload.getListOfProductLines().forEach(productLine -> validateOrder(productLine, order, productLines));
         order.setListOfProductLines(productLines);
         orderRepository.save(order);
+        log.info("Order with id {} updated successfully", orderId);
         return EntityMapper.INSTANCE.convertToOrderDto(order);
     }
 

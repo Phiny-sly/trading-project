@@ -10,12 +10,14 @@ import com.amalitech.tradingproject.exception.ProductDoesNotExistException;
 import com.amalitech.tradingproject.payload.ProductPayload;
 import com.amalitech.tradingproject.repository.OrderRepository;
 import com.amalitech.tradingproject.repository.ProductRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -31,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
         });
         Product product = EntityMapper.INSTANCE.convertToProduct(productPayload);
         productRepository.save(product);
+        log.info("Product created successfully");
         return EntityMapper.INSTANCE.convertToProductDto(product);
     }
 
@@ -39,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id).orElseThrow(() -> new ProductDoesNotExistException(id));
         EntityMapper.INSTANCE.updateProductDetails(product, productPayload);
         productRepository.save(product);
+        log.info("Product with id {} updated successfully", id);
         return EntityMapper.INSTANCE.convertToProductDto(product);
     }
 
