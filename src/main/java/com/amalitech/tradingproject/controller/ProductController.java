@@ -1,6 +1,7 @@
 package com.amalitech.tradingproject.controller;
 
 import com.amalitech.tradingproject.dto.ProductDto;
+import com.amalitech.tradingproject.dto.ProductLineDto;
 import com.amalitech.tradingproject.payload.ProductPayload;
 import com.amalitech.tradingproject.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class ProductController {
 
     @QueryMapping
     @PreAuthorize("isAuthenticated()")
-    public List<ProductDto> getProductsByOrderId(@Argument("id") long id) {
+    public List<ProductLineDto> getProductsByOrderId(@Argument("id") long id) {
         return productService.getProductsByOrderId(id);
     }
 }
