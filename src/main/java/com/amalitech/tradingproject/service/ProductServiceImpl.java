@@ -2,6 +2,7 @@ package com.amalitech.tradingproject.service;
 
 import com.amalitech.tradingproject.config.EntityMapper;
 import com.amalitech.tradingproject.dto.ProductDto;
+import com.amalitech.tradingproject.dto.ProductLineDto;
 import com.amalitech.tradingproject.model.Order;
 import com.amalitech.tradingproject.model.Product;
 import com.amalitech.tradingproject.exception.OrderDoesNotExistException;
@@ -55,11 +56,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> getProductsByOrderId(long orderId) {
+    public List<ProductLineDto> getProductsByOrderId(long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderDoesNotExistException(orderId));
         return order.getListOfProductLines()
                 .stream()
-                .map(productLine -> EntityMapper.INSTANCE.convertToProductDto(productLine.getProduct()))
+                .map(EntityMapper.INSTANCE::convertToProductLineDto)
                 .toList();
     }
 
