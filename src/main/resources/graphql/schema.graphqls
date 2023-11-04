@@ -2,7 +2,7 @@ type Query{
     getAllUsers:[UserDto!]!
     getUserById(id:ID!):UserDto!
     getAllProducts:[ProductDto!]!
-    getProductsByOrderId(id:ID!):[ProductDto!]!
+    getProductsByOrderId(id:ID!):[ProductLineDto!]!
     getAllOrders:[OrderDto!]!
     getOrderById(id:ID!):OrderDto!
     getOrdersByUserId(id:ID!):[OrderDto!]!
@@ -43,6 +43,7 @@ type OrderDto{
 }
 
 type ProductLineDto{
+    productId:Int!
     unitPrice:Float!
     productName:String!
     quantity:Int!
