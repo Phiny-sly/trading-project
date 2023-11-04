@@ -2,9 +2,9 @@ package com.amalitech.tradingproject.service;
 
 import com.amalitech.tradingproject.config.EntityMapper;
 import com.amalitech.tradingproject.dto.UserDto;
-import com.amalitech.tradingproject.model.User;
 import com.amalitech.tradingproject.exception.EmailAlreadyExistsException;
 import com.amalitech.tradingproject.exception.UserDoesNotExistException;
+import com.amalitech.tradingproject.model.User;
 import com.amalitech.tradingproject.payload.UserPayload;
 import com.amalitech.tradingproject.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 
