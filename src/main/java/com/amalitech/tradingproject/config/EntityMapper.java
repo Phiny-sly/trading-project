@@ -56,6 +56,7 @@ public interface EntityMapper {
     @Mapping(target = "quantity", source = "quantity")
     @Mapping(target = "productName", expression = "java(productLine.getProduct().getName())")
     @Mapping(target = "unitPrice", expression = "java(productLine.getProduct().getPrice())")
+    @Mapping(target = "productId", expression = "java(productLine.getProduct().getId())")
     ProductLineDto convertToProductLineDto(ProductLine productLine);
 
     void updateProductDetails(@MappingTarget Product product, ProductPayload productPayload);
