@@ -144,10 +144,11 @@ This project is a Java Spring Boot application that provides a GraphQL API for u
 
 - **ProductLineDto:**
     - Represents details for a product line within an order.
+        - `productId: Float!`
         - `unitPrice: Float!`
         - `productName: String!`
         - `quantity: Int!`
-
+        
 - **AuthDto:**
     - Represents authentication details.
         - `token: String!`
