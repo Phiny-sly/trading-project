@@ -8,6 +8,9 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -31,8 +34,8 @@ public class OrderController {
 
     @MutationMapping
     @PreAuthorize("isAuthenticated()")
-    public OrderDto createOrder(@Argument("input") OrderPayload orderPayload, @Argument("userId") long userId) {
-        return orderService.createOrder(orderPayload, userId);
+    public OrderDto createOrder(@Argument("input") OrderPayload orderPayload) {
+        return orderService.createOrder(orderPayload);
     }
 
     @QueryMapping
@@ -49,7 +52,7 @@ public class OrderController {
 
     @QueryMapping
     @PreAuthorize("isAuthenticated()")
-    public List<OrderDto> getOrdersByUserId(@Argument("id") long userId) {
-        return orderService.getOrdersByUserId(userId);
+    public List<OrderDto> getOrdersByUserId() {
+        return orderService.getOrdersByUserId();
     }
 }

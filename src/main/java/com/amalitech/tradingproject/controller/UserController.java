@@ -26,8 +26,8 @@ public class UserController {
 
     @MutationMapping
     @PreAuthorize("isAuthenticated()")
-    public UserDto updateUser(@Argument("id") long id, @Argument("input") UserPayload userPayload) {
-        return userService.updateUser(id, userPayload);
+    public UserDto updateUser(@Argument("input") UserPayload userPayload) {
+        return userService.updateUser(userPayload);
     }
 
     @MutationMapping
