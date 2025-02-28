@@ -92,8 +92,8 @@ This project is a Java Spring Boot application that provides a GraphQL API for u
 - **createUser(input):**
     - Creates a new user based on the provided input.
 
-- **updateUser(id, input):**
-    - Updates user details for the user identified by the provided ID.
+- **updateUser(input):**
+    - Updates user details for the user identified.
 
 - **deleteUser(id):**
     - Deletes a user identified by the provided ID.
@@ -107,11 +107,11 @@ This project is a Java Spring Boot application that provides a GraphQL API for u
 - **deleteProduct(id):**
     - Deletes a product identified by the provided ID.
 
-- **createOrder(input, userId):**
-    - Creates a new order based on the provided input and user ID.
+- **createOrder(input):**
+    - Creates a new order based on the provided input.
 
-- **updateOrder(id, input):**
-    - Updates order details for the order identified by the provided ID.
+- **updateOrder(input):**
+    - Updates order details for the order.
 
 - **deleteOrder(id):**
     - Deletes an order identified by the provided ID.
