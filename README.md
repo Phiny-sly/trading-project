@@ -1,4 +1,4 @@
-# Amalitech-Challenge
+# Trading Project
 
 ## Description
 This project is a Java Spring Boot application that provides a GraphQL API for users to place orders on various products. The application is containerized using Docker, making it easy to deploy and run in a consistent environment. Testing can be performed using GraphiQL, and no front-end is required.
