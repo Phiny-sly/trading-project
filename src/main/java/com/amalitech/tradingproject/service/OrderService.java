@@ -6,10 +6,10 @@ import com.amalitech.tradingproject.payload.OrderPayload;
 import java.util.List;
 
 public interface OrderService {
-    OrderDto createOrder(OrderPayload orderPayload,long userId);
+    OrderDto createOrder(OrderPayload orderPayload);
     OrderDto updateOrder(OrderPayload orderPayload, long id);
     List<OrderDto> getAllOrders();
     OrderDto getOrderById(long id);
     void deleteOrder(long id);
-    List<OrderDto> getOrdersByUserId(long userId);
+    List<OrderDto> getOrdersByUserId();
 }

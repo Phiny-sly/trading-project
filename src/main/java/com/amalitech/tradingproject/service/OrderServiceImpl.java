@@ -14,9 +14,11 @@ import com.amalitech.tradingproject.payload.ProductLinePayload;
 import com.amalitech.tradingproject.repository.OrderRepository;
 import com.amalitech.tradingproject.repository.ProductRepository;
 import com.amalitech.tradingproject.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,15 +33,14 @@ public class OrderServiceImpl implements OrderService {
     private ProductRepository productRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Override
-    public OrderDto createOrder(OrderPayload orderPayload, long userId) {
+    public OrderDto createOrder(OrderPayload orderPayload) {
         Order order = new Order();
         List<ProductLine> productLines = new ArrayList<>();
-        userRepository.findById(userId).ifPresentOrElse(order::setUser, () -> {
-            throw new UserDoesNotExistException(userId);
+        String username = getUsername();
+        userRepository.findByEmail(username).ifPresentOrElse(order::setUser, () -> {
+            throw new UserDoesNotExistException(username);
         });
         orderPayload.getListOfProductLines().forEach(productLine -> validateOrder(productLine, order, productLines));
         order.setListOfProductLines(productLines);
@@ -50,13 +51,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto updateOrder(OrderPayload orderPayload, long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderDoesNotExistException(orderId));
-        List<ProductLine> productLines = new ArrayList<>();
-        orderPayload.getListOfProductLines().forEach(productLine -> validateOrder(productLine, order, productLines));
-        order.setListOfProductLines(productLines);
-        orderRepository.save(order);
-        log.info("Order with id {} updated successfully", orderId);
-        return EntityMapper.INSTANCE.convertToOrderDto(order);
+        if (orderRepository.findByUsernameAndOrderId(getUsername(), orderId).isPresent()) {
+            Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderDoesNotExistException(orderId));
+            List<ProductLine> productLines = new ArrayList<>();
+            orderPayload.getListOfProductLines().forEach(productLine -> validateOrder(productLine, order, productLines));
+            order.setListOfProductLines(productLines);
+            orderRepository.save(order);
+            log.info("Order with id {} updated successfully", orderId);
+            return EntityMapper.INSTANCE.convertToOrderDto(order);
+        }
+
+        throw new OrderDoesNotExistException(orderId);
     }
 
     private void validateOrder(ProductLinePayload productLine, Order order, List<ProductLine> productLines) {
@@ -84,16 +89,25 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto getOrderById(long id) {
-        return EntityMapper.INSTANCE.convertToOrderDto(orderRepository.findById(id).orElseThrow(() -> new OrderDoesNotExistException(id)));
+        String username = getUsername();
+        return EntityMapper.INSTANCE.convertToOrderDto(orderRepository.findByUsernameAndOrderId(username, id).orElseThrow(() -> new OrderDoesNotExistException(id)));
     }
 
     @Override
     public void deleteOrder(long id) {
-        orderRepository.deleteById(id);
+        String username = getUsername();
+        if (orderRepository.findByUsernameAndOrderId(username, id).isPresent()) {
+            orderRepository.deleteById(id);
+        }
     }
 
     @Override
-    public List<OrderDto> getOrdersByUserId(long userId) {
-        return orderRepository.findOrdersByUserId(userId).stream().map(EntityMapper.INSTANCE::convertToOrderDto).toList();
+    public List<OrderDto> getOrdersByUserId() {
+        return orderRepository.findOrdersByUserId(getUsername()).stream().map(EntityMapper.INSTANCE::convertToOrderDto).toList();
+    }
+
+    private String getUsername() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        return ((UserDetails) context.getAuthentication().getPrincipal()).getUsername();
     }
 }

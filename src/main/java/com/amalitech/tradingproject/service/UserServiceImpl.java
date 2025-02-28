@@ -9,6 +9,8 @@ import com.amalitech.tradingproject.payload.UserPayload;
 import com.amalitech.tradingproject.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,18 +41,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDto updateUser(long id, UserPayload userPayload) {
+    public UserDto updateUser(UserPayload userPayload) {
+
         var ref = new Object() {
             User userResult = null;
         };
-        userRepository.findById(id).ifPresentOrElse(user -> {
+        String username = getUsername();
+        userRepository.findByEmail(username).ifPresentOrElse(user -> {
             EntityMapper.INSTANCE.updateUserDetails(user, userPayload);
             userRepository.save(user);
             ref.userResult = user;
         }, () -> {
-            throw new UserDoesNotExistException(id);
+            throw new UserDoesNotExistException(username);
         });
-        log.info("User with id {} updated successfully", id);
+        log.info("User with email {} updated successfully", username);
         return EntityMapper.INSTANCE.convertToUserDto(ref.userResult);
     }
 
@@ -77,5 +81,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .password(user.getPassword())
                 .roles(user.getRole().name())
                 .build();
+    }
+
+    private String getUsername() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        return ((UserDetails) context.getAuthentication().getPrincipal()).getUsername();
     }
 }
