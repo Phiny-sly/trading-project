@@ -5,18 +5,18 @@ type Query{
     getProductsByOrderId(id:ID!):[ProductLineDto!]!
     getAllOrders:[OrderDto!]!
     getOrderById(id:ID!):OrderDto!
-    getOrdersByUserId(id:ID!):[OrderDto!]!
+    getOrdersByUserId:[OrderDto!]!
 }
 
 type Mutation{
     createUser(input:UserPayload!):UserDto
-    updateUser(id:ID!,input:UserPayload!):UserDto!
+    updateUser(input:UserPayload!):UserDto!
     deleteUser(id:ID!):ID
     createProduct(input:ProductPayload!):ProductDto!
-    updateProduct(input:ProductPayload!,id:ID!):ProductDto!
+    updateProduct(input:ProductPayload!):ProductDto!
     deleteProduct(id:ID!):ID
-    createOrder(input:OrderPayload!,userId:ID!):OrderDto!
-    updateOrder(input:OrderPayload!,id:ID!):OrderDto!
+    createOrder(input:OrderPayload!):OrderDto!
+    updateOrder(input:OrderPayload!):OrderDto!
     deleteOrder(id:ID!):ID
     login(input:AuthPayload!):AuthDto!
 }
