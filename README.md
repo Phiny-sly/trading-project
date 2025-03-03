@@ -40,8 +40,8 @@ This project is a Java Spring Boot application that provides a GraphQL API for u
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/Phiny-sly/amalitech-challenge
-   cd amalitech-challenge
+   git clone https://github.com/Phiny-sly/trading-project
+   cd trading-project
    ```
 2. **Build the Docker Image:**
    - Make sure you have Docker installed.
