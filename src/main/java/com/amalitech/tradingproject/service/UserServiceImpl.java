@@ -72,13 +72,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public void deleteUser(Long id) {
-        log.debug("Deleting user with id: {}", id);
-        if (!userRepository.existsById(id)) {
-            throw new UserDoesNotExistException(id);
-        }
-        userRepository.deleteById(id);
-        log.info("User with id {} deleted successfully", id);
+    public void deleteUser() {
+        String email = securityContextService.getCurrentUserEmail();
+        log.debug("Deleting user with email: {}", email);
+        
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserDoesNotExistException(email));
+            
+        userRepository.delete(user);
+        log.info("User with email {} deleted successfully", email);
     }
 
     @Override
@@ -94,6 +96,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         log.debug("Retrieving user with id: {}", id);
         User user = userRepository.findById(id)
             .orElseThrow(() -> new UserDoesNotExistException(id));
+        return EntityMapper.INSTANCE.convertToUserDto(user);
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) {
+        log.debug("Retrieving user with email: {}", email);
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserDoesNotExistException(email));
         return EntityMapper.INSTANCE.convertToUserDto(user);
     }
 

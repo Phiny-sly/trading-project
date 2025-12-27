@@ -27,11 +27,9 @@ public interface UserService {
     UserDto updateUser(UserPayload userPayload);
     
     /**
-     * Deletes a user by ID.
-     *
-     * @param id the user ID to delete
+     * Deletes the currently authenticated user's account.
      */
-    void deleteUser(Long id);
+    void deleteUser();
     
     /**
      * Retrieves all users.
@@ -47,4 +45,12 @@ public interface UserService {
      * @return the user DTO
      */
     UserDto getUserById(Long id);
+    
+    /**
+     * Retrieves a user by email.
+     *
+     * @param email the user email
+     * @return the user DTO
+     */
+    UserDto getUserByEmail(String email);
 }

@@ -11,7 +11,7 @@ type Query{
 type Mutation{
     createUser(input:UserPayload!):UserDto
     updateUser(input:UserPayload!):UserDto!
-    deleteUser(id:ID!):ID
+    deleteUser:ID!
     createProduct(input:ProductPayload!):ProductDto!
     updateProduct(input:ProductPayload!):ProductDto!
     deleteProduct(id:ID!):ID

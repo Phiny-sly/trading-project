@@ -2,6 +2,7 @@ package com.amalitech.tradingproject.controller;
 
 import com.amalitech.tradingproject.dto.UserDto;
 import com.amalitech.tradingproject.payload.UserPayload;
+import com.amalitech.tradingproject.service.SecurityContextService;
 import com.amalitech.tradingproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -20,11 +21,17 @@ import java.util.List;
 public class UserController {
     
     private final UserService userService;
+    private final SecurityContextService securityContextService;
 
     @MutationMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public void deleteUser(@Argument("id") Long id) {
-        userService.deleteUser(id);
+    @PreAuthorize("isAuthenticated()")
+    public Long deleteUser() {
+        // Get the user ID before deletion for return value
+        String email = securityContextService.getCurrentUserEmail();
+        UserDto user = userService.getUserByEmail(email);
+        Long userId = user.getId();
+        userService.deleteUser();
+        return userId;
     }
 
     @MutationMapping
