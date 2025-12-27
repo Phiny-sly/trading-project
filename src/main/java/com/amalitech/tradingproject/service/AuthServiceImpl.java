@@ -1,52 +1,52 @@
 package com.amalitech.tradingproject.service;
 
 import com.amalitech.tradingproject.dto.AuthDto;
-import com.amalitech.tradingproject.model.User;
 import com.amalitech.tradingproject.payload.AuthPayload;
-import com.amalitech.tradingproject.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
-
+/**
+ * Service implementation for authentication operations.
+ */
 @Service
 @Slf4j
-public class AuthServiceImpl implements AuthService{
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-    @Autowired
-    private JwtGeneratorService jwtService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private HttpSession httpSession;
+    private final UserDetailsService userDetailsService;
+    private final JwtGeneratorService jwtGeneratorService;
+    private final AuthenticationManager authenticationManager;
 
     @Override
+    @Transactional(readOnly = true)
     public AuthDto login(AuthPayload authPayload) {
-        String token;
+        log.debug("Attempting login for email: {}", authPayload.getEmail());
+        
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authPayload.getEmail(), authPayload.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    authPayload.getEmail(), 
+                    authPayload.getPassword()
+                )
+            );
+            
             UserDetails userDetails = userDetailsService.loadUserByUsername(authPayload.getEmail());
-            token = jwtService.generateToken(userDetails);
-            User user = userRepository.findByEmail(authPayload.getEmail()).orElseThrow();
-            httpSession.setAttribute("user", user);
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid email/password supplied");
+            String token = jwtGeneratorService.generateToken(userDetails);
+            
+            log.info("Login successful for email: {}", authPayload.getEmail());
+            return new AuthDto(token);
+            
+        } catch (org.springframework.security.core.AuthenticationException e) {
+            log.warn("Login failed for email: {} - Invalid credentials", authPayload.getEmail());
+            throw new BadCredentialsException("Invalid email or password");
         }
-
-        return new AuthDto(token);
     }
 }

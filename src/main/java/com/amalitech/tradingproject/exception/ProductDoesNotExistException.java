@@ -1,7 +1,11 @@
 package com.amalitech.tradingproject.exception;
 
-public class ProductDoesNotExistException extends RuntimeException{
-    public ProductDoesNotExistException(long id) {
-        super(String.format("Product with name %d does not exist", id));
+/**
+ * Exception thrown when a product is not found.
+ */
+public class ProductDoesNotExistException extends ResourceNotFoundException {
+    
+    public ProductDoesNotExistException(Long id) {
+        super(String.format("Product with id %d does not exist", id));
     }
 }

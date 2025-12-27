@@ -1,7 +1,12 @@
 package com.amalitech.tradingproject.exception;
 
-public class StockLimitException extends RuntimeException {
-    public StockLimitException(String name, int stock, int quantity) {
-        super(String.format("Stock limit reached for product %s. Stock: %d, Quantity: %d", name, stock, quantity));
+/**
+ * Exception thrown when trying to order more items than available in stock.
+ */
+public class StockLimitException extends BusinessLogicException {
+    
+    public StockLimitException(String productName, int stock, int orderedQuantity) {
+        super(String.format("Product %s has only %d items in stock, but %d items were ordered", 
+            productName, stock, orderedQuantity));
     }
 }

@@ -7,84 +7,106 @@ import com.amalitech.tradingproject.exception.UserDoesNotExistException;
 import com.amalitech.tradingproject.model.User;
 import com.amalitech.tradingproject.payload.UserPayload;
 import com.amalitech.tradingproject.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Service implementation for user management operations.
+ */
 @Service
 @Slf4j
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final SecurityContextService securityContextService;
 
     @Override
+    @Transactional
     public UserDto createUser(UserPayload userPayload) {
-        userRepository.findByEmail(userPayload.getEmail()).ifPresent(user -> {
-            throw new EmailAlreadyExistsException(userPayload.getEmail());
-        });
+        log.debug("Creating user with email: {}", userPayload.getEmail());
+        
+        userRepository.findByEmail(userPayload.getEmail())
+            .ifPresent(user -> {
+                throw new EmailAlreadyExistsException(userPayload.getEmail());
+            });
+            
         User user = EntityMapper.INSTANCE.convertToUser(userPayload);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        log.info("User created successfully");
-        return EntityMapper.INSTANCE.convertToUserDto(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User savedUser = userRepository.save(user);
+        
+        log.info("User created successfully with email: {}", savedUser.getEmail());
+        return EntityMapper.INSTANCE.convertToUserDto(savedUser);
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(UserPayload userPayload) {
-
-        var ref = new Object() {
-            User userResult = null;
-        };
-        String username = getUsername();
-        userRepository.findByEmail(username).ifPresentOrElse(user -> {
-            EntityMapper.INSTANCE.updateUserDetails(user, userPayload);
-            userRepository.save(user);
-            ref.userResult = user;
-        }, () -> {
-            throw new UserDoesNotExistException(username);
-        });
-        log.info("User with email {} updated successfully", username);
-        return EntityMapper.INSTANCE.convertToUserDto(ref.userResult);
+        String email = securityContextService.getCurrentUserEmail();
+        log.debug("Updating user with email: {}", email);
+        
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserDoesNotExistException(email));
+            
+        EntityMapper.INSTANCE.updateUserDetails(user, userPayload);
+        
+        // Only encode password if it's being updated
+        if (userPayload.getPassword() != null && !userPayload.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userPayload.getPassword()));
+        }
+        
+        User updatedUser = userRepository.save(user);
+        log.info("User with email {} updated successfully", email);
+        return EntityMapper.INSTANCE.convertToUserDto(updatedUser);
     }
 
     @Override
-    public void deleteUser(long id) {
+    @Transactional
+    public void deleteUser(Long id) {
+        log.debug("Deleting user with id: {}", id);
+        if (!userRepository.existsById(id)) {
+            throw new UserDoesNotExistException(id);
+        }
         userRepository.deleteById(id);
+        log.info("User with id {} deleted successfully", id);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream().map(EntityMapper.INSTANCE::convertToUserDto).toList();
+        log.debug("Retrieving all users");
+        return userRepository.findAll().stream()
+            .map(EntityMapper.INSTANCE::convertToUserDto)
+            .toList();
     }
 
     @Override
-    public UserDto getUserById(long id) {
-        return EntityMapper.INSTANCE.convertToUserDto(userRepository.findById(id).orElseThrow(() -> new UserDoesNotExistException(id)));
+    public UserDto getUserById(Long id) {
+        log.debug("Retrieving user with id: {}", id);
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new UserDoesNotExistException(id));
+        return EntityMapper.INSTANCE.convertToUserDto(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserDoesNotExistException(email));
+        log.debug("Loading user by username (email): {}", email);
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserDoesNotExistException(email));
         return org.springframework.security.core.userdetails.User
                 .withUsername(email)
                 .password(user.getPassword())
                 .roles(user.getRole().name())
                 .build();
-    }
-
-    private String getUsername() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        return ((UserDetails) context.getAuthentication().getPrincipal()).getUsername();
     }
 }

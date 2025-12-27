@@ -3,32 +3,33 @@ package com.amalitech.tradingproject.controller;
 import com.amalitech.tradingproject.dto.OrderDto;
 import com.amalitech.tradingproject.payload.OrderPayload;
 import com.amalitech.tradingproject.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
-@RestController
+/**
+ * GraphQL controller for order management operations.
+ */
+@Controller
+@RequiredArgsConstructor
 public class OrderController {
-    @Autowired
-    private OrderService orderService;
+    
+    private final OrderService orderService;
 
     @MutationMapping
     @PreAuthorize("isAuthenticated()")
-    public void deleteOrder(@Argument("id") long id) {
+    public void deleteOrder(@Argument("id") Long id) {
         orderService.deleteOrder(id);
     }
 
     @MutationMapping
     @PreAuthorize("isAuthenticated()")
-    public OrderDto updateOrder(@Argument("input") OrderPayload orderPayload, @Argument("id") long id) {
+    public OrderDto updateOrder(@Argument("input") OrderPayload orderPayload, @Argument("id") Long id) {
         return orderService.updateOrder(orderPayload, id);
     }
 
@@ -46,7 +47,7 @@ public class OrderController {
 
     @QueryMapping
     @PreAuthorize("isAuthenticated()")
-    public OrderDto getOrderById(@Argument("id") long id) {
+    public OrderDto getOrderById(@Argument("id") Long id) {
         return orderService.getOrderById(id);
     }
 

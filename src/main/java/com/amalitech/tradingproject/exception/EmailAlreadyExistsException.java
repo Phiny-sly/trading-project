@@ -1,7 +1,11 @@
 package com.amalitech.tradingproject.exception;
 
-public class EmailAlreadyExistsException extends RuntimeException {
+/**
+ * Exception thrown when trying to register a user with an email that already exists.
+ */
+public class EmailAlreadyExistsException extends ResourceAlreadyExistsException {
+    
     public EmailAlreadyExistsException(String email) {
-        super(String.format("%s already exists", email));
+        super(String.format("User with email %s already exists", email));
     }
 }

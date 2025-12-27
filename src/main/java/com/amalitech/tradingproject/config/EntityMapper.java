@@ -15,23 +15,21 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Component;
 
+/**
+ * MapStruct mapper for converting between entities, DTOs, and payloads.
+ */
 @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-@Component
 public interface EntityMapper {
     EntityMapper INSTANCE = Mappers.getMapper(EntityMapper.class);
 
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "email", target = "email")
-    @Mapping(source = "role", target = "role")
-    @Mapping(source = "id", target = "id")
     UserDto convertToUserDto(User user);
 
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "email", target = "email")
-    @Mapping(source = "role", target = "role")
-    @Mapping(source = "password", target = "password")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "listOfOrders", ignore = true)
+    @Mapping(target = "authorities", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     User convertToUser(UserPayload userPayload);
 
     void updateUserDetails(@MappingTarget User user, UserPayload userPayload);
@@ -48,9 +46,10 @@ public interface EntityMapper {
     @Mapping(target = "stock", source = "stock")
     ProductDto convertToProductDto(Product product);
 
-    @Mapping(target = "name", source = "name")
-    @Mapping(target = "price", source = "price")
-    @Mapping(target = "stock", source = "stock")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "listOfProductLines", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Product convertToProduct(ProductPayload productPayload);
 
     @Mapping(target = "quantity", source = "quantity")

@@ -3,24 +3,27 @@ package com.amalitech.tradingproject.controller;
 import com.amalitech.tradingproject.dto.UserDto;
 import com.amalitech.tradingproject.payload.UserPayload;
 import com.amalitech.tradingproject.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
-@RestController
+/**
+ * GraphQL controller for user management operations.
+ */
+@Controller
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService userService;
+    
+    private final UserService userService;
 
     @MutationMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteUser(@Argument("id") long id) {
+    public void deleteUser(@Argument("id") Long id) {
         userService.deleteUser(id);
     }
 
@@ -44,8 +47,7 @@ public class UserController {
 
     @QueryMapping
     @PreAuthorize("isAuthenticated()")
-    public UserDto getUserById(@Argument("id") long id) {
+    public UserDto getUserById(@Argument("id") Long id) {
         return userService.getUserById(id);
     }
 }
-
